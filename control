@@ -1,0 +1,9 @@
+Package: org.olcbox.keepalive
+Name: Olcbox KeepAlive
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: Keeps Olcbox alive in background by looping silent audio while the app is open.
+Maintainer: Olcbox
+Author: Olcbox
+Section: Tweaks
+Depends: mobilesubstrate
