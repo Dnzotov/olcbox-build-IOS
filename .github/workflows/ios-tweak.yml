@@ -1,0 +1,61 @@
+name: Build iOS Tweak
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, universal-carrier ]
+    paths:
+      - iosTweak/**
+      - .github/workflows/ios-tweak.yml
+  pull_request:
+    paths:
+      - iosTweak/**
+      - .github/workflows/ios-tweak.yml
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.package-scheme }} package
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package-scheme: rootful
+            make-args: FINALPACKAGE=1
+          - package-scheme: rootless
+            make-args: FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+
+    env:
+      THEOS: ${{ github.workspace }}/theos
+
+    steps:
+      - name: Checkout olcbox
+        uses: actions/checkout@v6
+
+      - name: Install build dependencies
+        run: |
+          brew update
+          brew install dpkg ldid make xz
+
+      - name: Install Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git "$THEOS"
+
+      - name: Build tweak package
+        working-directory: iosTweak
+        run: |
+          gmake package ${{ matrix.make-args }}
+
+      - name: Show package output
+        run: |
+          find iosTweak/packages -maxdepth 1 -type f -print
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: OlcboxKeepAlive-${{ matrix.package-scheme }}
+          path: iosTweak/packages/*
+          if-no-files-found: error
