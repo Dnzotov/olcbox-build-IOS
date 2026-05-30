@@ -1,6 +1,6 @@
 # Olcbox KeepAlive iOS Tweak
 
-The tweak is a Theos `dylib` package for jailbroken iOS devices. It loads only into `org.olcbox.app.ios` and starts an infinite silent audio loop as soon as Olcbox is opened, including after the app enters background.
+The tweak is a Theos `dylib` package. It loads only into `org.olcbox.app.ios` and starts an infinite silent audio loop as soon as Olcbox is opened, including after the app enters background.
 
 The iOS app already declares `UIBackgroundModes -> audio` in `iosApp/iosApp/Info.plist`, so the tweak uses `AVAudioSessionCategoryPlayback` and `AVAudioPlayer` to keep iOS treating the app as an audio player.
 
